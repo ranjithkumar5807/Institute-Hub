@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Communications</title>
+    <link rel="stylesheet" href="/static/communications.css">
+</head>
+<body>
+    <nav class='navbar'>
+        <h2>Institute Hub</h2>
+        <div class='nvbrcolour'>
+            <a href='/events'>Events</a>
+            <a href='/calendar'>Calendar</a>
+            <a href='/resource'>Resource</a>
+            <a href='/communication'>Communication</a>
+            <a href="/tasks">Tasks</a>
+            <div class="profile-container">
+                <button class="profile-button" onclick="toggleDropdown()">Options</button>
+                <div class="dropdown-menu" id="dropdownMenu">
+                    <a href="/profile">Profile</a>
+                    <a href="/logout">Logout</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <h2>Communications</h2>
+        <div>
+            <h3>Send Communication</h3>
+            <form id="sendCommunicationForm">
+                <input type="text" id="title" placeholder="Title" required>
+                <textarea id="message" placeholder="Message" required></textarea>
+                <input type="email" id="recipient" placeholder="Recipient Email" required>
+                <button type="submit">Send</button>
+            </form>
+        </div>
+        <div id="communicationsList">
+            <h3>Received Communications</h3>
+        </div>
+    </div>
+
+    <script>
+        function toggleDropdown() {
+            document.getElementById("dropdownMenu").classList.toggle("show");
+        }
+
+        window.onclick = function(event) {
+            if (!event.target.matches('.profile-button')) {
+                var dropdowns = document.getElementsByClassName("dropdown-menu");
+                for (var i = 0; i < dropdowns.length; i++) {
+                    var openDropdown = dropdowns[i];
+                    if (openDropdown.classList.contains('show')) {
+                        openDropdown.classList.remove('show');
+                    }
+                }
+            }
+        }
+
+        async function fetchCommunications() {
+            try {
+                const response = await fetch('/communications');
+                const communications = await response.json();
+                displayCommunications(communications);
+            } catch (error) {
+                console.error('Error fetching communications:', error);
+            }
+        }
+
+        function displayCommunications(communications) {
+            const communicationsListDiv = document.getElementById('communicationsList');
+            communicationsListDiv.innerHTML = '<h3>Received Communications</h3>';
+            communications.forEach(comm => {
+                const commCard = document.createElement('div');
+                commCard.classList.add('comm-card');
+                commCard.innerHTML = `
+                    <h4>${comm[1]}</h4>
+                    <p><strong>Message:</strong> ${comm[2]}</p>
+                    <p><strong>Sender:</strong> ${comm[3]}</p>
+                    <p><strong>Recipient:</strong> ${comm[4]}</p>
+                    <p><strong>Timestamp:</strong> ${new Date(comm[5]).toLocaleString()}</p>
+                    <button class="delete-btn" onclick="deleteCommunication(${comm[0]})">Delete</button>
+                `;
+                communicationsListDiv.appendChild(commCard);
+            });
+        }
+
+        async function deleteCommunication(id) {
+            try {
+                await fetch(`/communications/${id}`, { method: 'DELETE' });
+                fetchCommunications(); // Refresh the list
+            } catch (error) {
+                console.error('Error deleting communication:', error);
+            }
+        }
+
+        document.getElementById('sendCommunicationForm').addEventListener('submit', async (event) => {
+            event.preventDefault();
+            const title = document.getElementById('title').value;
+            const message = document.getElementById('message').value;
+            const recipient = document.getElementById('recipient').value;
+
+            try {
+                await fetch('/send-communication', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ title, message, recipient })
+                });
+                fetchCommunications(); // Refresh the list
+                event.target.reset(); // Clear the form
+            } catch (error) {
+                console.error('Error sending communication:', error);
+            }
+        });
+
+        // Fetch communications on page load
+        fetchCommunications();
+    </script>
+</body>
+</html>

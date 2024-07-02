@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Events</title>
+    <link rel="stylesheet" href="/static/events.css">
+</head>
+<body>
+    <nav class='navbar'>
+        <h2>Institute Hub</h2>
+        <div class='nvbrcolour'>
+            <a href='/events'>Events</a>
+            <a href='/calendar'>Calendar</a>
+            <a href='/resource'>Resource</a>
+            <a href='/communication'>Communication</a>
+            <a href="/tasks">Tasks</a>
+            <div class="profile-container">
+                <button class="profile-button" onclick="toggleDropdown()">Options</button>
+                <div class="dropdown-menu" id="dropdownMenu">
+                    <a href="/profile">Profile</a>
+                    <a href="/logout">Logout</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+
+    <div class="events-page">
+        <div class="left-sidebar">
+            <div class="event-box">
+                <h3>Create Event</h3>
+                <button onclick="location.href='/create-event'">Create</button>
+            </div>
+            <div class="event-box">
+                <h3>Created Events</h3>
+                <button onclick="location.href='/created-events'">View</button>
+            </div>
+        </div>
+        <div class="events-list" id="eventsList">
+            <h2>All Events</h2>
+            <!-- Events will be dynamically inserted here -->
+        </div>
+    </div>
+
+    <script>
+        function toggleDropdown() {
+            document.getElementById("dropdownMenu").classList.toggle("show");
+        }
+
+        window.onclick = function(event) {
+            if (!event.target.matches('.profile-button')) {
+                var dropdowns = document.getElementsByClassName("dropdown-menu");
+                for (var i = 0; i < dropdowns.length; i++) {
+                    var openDropdown = dropdowns[i];
+                    if (openDropdown.classList.contains('show')) {
+                        openDropdown.classList.remove('show');
+                    }
+                }
+            }
+        }
+
+        window.onload = loadevents;
+
+        async function loadevents() {
+            try {
+                const response = await fetch('/all-events-data');
+                const data = await response.json();
+
+                const eventsListDiv = document.getElementById('eventsList');
+                const registeredResponse = await fetch('/registered-events');
+                const registeredData = await registeredResponse.json(); 
+                data.forEach(event => {
+                    const eventCard = document.createElement('div');
+                    eventCard.classList.add('event-card');
+
+                    eventCard.innerHTML = `
+                        <h3>${event.name}</h3>
+                        <p><strong>Description:</strong> ${event.description}</p>
+                        <p><strong>Type:</strong> ${event.type}</p>
+                        <p><strong>Date:</strong> ${new Date(event.event_date).toLocaleDateString()}</p>
+                        <p><strong>Created By:</strong> ${event.email}</p>
+                        <p><strong>Location:</strong> ${event.resource_details}</p>
+                        <p><strong>From Time:</strong> ${new Date(event.from_time).toLocaleTimeString()}</p>
+                        <p><strong>To Time:</strong> ${new Date(event.to_time).toLocaleTimeString()}</p>
+                        <p><strong>Registrations:</strong> ${event.registrations}</p>
+                        
+                    `;
+                    if(registeredData.includes(event.eid)){
+                        eventCard.innerHTML+=`<div style='display:flex;justify-content:center'><label>Already Registered</label></div>`
+                    }else{
+                        eventCard.innerHTML+=`<div style='display:flex;justify-content:center'><button class='btn'onclick='registerevent()' data-eid=${event.eid}>Register</button></div>`
+                    }
+
+                    
+                    eventsListDiv.appendChild(eventCard);
+                });
+            } catch (error) {
+                console.error('Error fetching created events:', error);
+            }
+        }
+
+        async function registerevent(){
+            const eid = event.target.getAttribute('data-eid');
+            try {
+                        const response = await fetch('/register-event', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify({ eid })
+                        });
+                        
+                        if (response.ok) {
+                            alert('Event registered successfully!');
+                            // Optionally, update UI or perform other actions
+                            window.location.href = '/events';
+                            
+                        } else {
+                            alert('Failed to register event. Please try again.');
+                        }
+                    } catch (error) {
+                        console.error('Error registering event:', error);
+                        alert('An error occurred while registering event. Please try again later.');
+                    }
+        }
+    </script>
+</body>
+</html>

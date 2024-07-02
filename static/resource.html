@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resources</title>
+    <link rel="stylesheet" href="/static/resource.css">
+</head>
+<body>
+    <nav class='navbar'>
+        <h2>Institute Hub</h2>
+        <div class='nvbrcolour'>
+            <a href='/events'>Events</a>
+            <a href='/calendar'>Calendar</a>
+            <a href='/resource'>Resource</a>
+            <a href='/communication'>Communication</a>
+            <a href="/tasks">Tasks</a>
+            <div class="profile-container">
+                <button class="profile-button" onclick="toggleDropdown()">Options</button>
+                <div class="dropdown-menu" id="dropdownMenu">
+                    <a href="/profile">Profile</a>
+                    <a href="/logout">Logout</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+
+    <div class="resource-page">
+        <h2>Resources</h2>
+        <div class="resource-cards">
+            <div class="resource-card">
+                <h3>Schedule Resource</h3>
+                <p>Schedule a new resource.<br></p>
+                <button onclick="location.href='/schedule-resource'">Schedule</button>
+            </div>
+            <div class="resource-card">
+                <h3>Scheduled Resources</h3>
+                <p>View and manage your already scheduled resources.</p>
+                <button onclick="location.href='/view-resource'">View</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function toggleDropdown() {
+            document.getElementById("dropdownMenu").classList.toggle("show");
+        }
+
+        window.onclick = function(event) {
+            if (!event.target.matches('.profile-button')) {
+                var dropdowns = document.getElementsByClassName("dropdown-menu");
+                for (var i = 0; i < dropdowns.length; i++) {
+                    var openDropdown = dropdowns[i];
+                    if (openDropdown.classList.contains('show')) {
+                        openDropdown.classList.remove('show');
+                    }
+                }
+            }
+        }
+    </script>
+</body>
+</html>

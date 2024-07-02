@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="stylesheet" href="/static/dfindex.css">
+</head>
+<body>
+
+<nav class='navbar'>
+    <h2>Institute Hub</h2>
+    <div class='nvbrcolour'>
+        <a href='/signin'>Events</a>
+        <a href='/signin'>Calendar</a>
+        <a href='/signin'>Resource</a>
+        <a href='/signin'>Communication</a>
+        <a href="/signin">Tasks</a>
+        <a href="/signin">Sign In</a>
+        <!-- <div class="profile-container">
+            <button class="profile-button" onclick="toggleDropdown()">Profile</button>
+            <div class="dropdown-menu" id="dropdownMenu">
+                <a href="#">Profile</a>
+                <a href="#">Settings</a>
+                <a href="#">Logout</a>
+            </div>
+        </div> -->
+    </div>
+</nav>   
+
+<div class="index-body">
+    <div class="bg-image">
+        <img src="/static/images/institute.jpg">
+    </div>
+    <div class="card-holder">
+        <div class="home-card">
+            <h2>Events</h2>
+            <p>To create, schedule, and manage events such as seminars, workshops, and cultural programs.</p>
+            <div class="center-button" ><button onclick="clicksignin()">Events</button></div>
+        </div>
+        <div class="home-card">
+            <h2>Calendar</h2>
+            <p>Dynamic calendar, to view and manage institute-wide schedules, class timetables, meetings, and deadlines.</p>
+            <div class="center-button" ><button onclick="clicksignin()">Calendar</button></div>
+        </div>
+        <div class="home-card">
+            <h2>Resource</h2>
+            <p>Allocate and manage resources such as classrooms, and equipment.</p>
+            <div class="center-button"><button onclick="clicksignin()">Resource</button></div>
+        </div>
+        <div class="home-card">
+            <h2>Communication</h2>
+            <p>For Announcements, Messages, Notifications, and Reminders.</p>
+            <div class="center-button"><button onclick="clicksignin()">Communication</button></div>
+        </div>
+        <div class="home-card">
+            <h2>Tasks</h2>
+            <p>Create and Assign Tasks, Set Deadlines, and Track Progress.</p>
+            <div class="center-button"><button onclick="clicksignin()">Tasks</button></div>
+        </div>
+    </div>
+</div>
+
+    <script>
+                // script.js
+            function toggleDropdown() {
+                document.getElementById("dropdownMenu").classList.toggle("show");
+            }
+
+            // Close the dropdown if the user clicks outside of it
+            window.onclick = function(event) {
+                if (!event.target.matches('.profile-button')) {
+                    var dropdowns = document.getElementsByClassName("dropdown-menu");
+                    for (var i = 0; i < dropdowns.length; i++) {
+                        var openDropdown = dropdowns[i];
+                        if (openDropdown.classList.contains('show')) {
+                            openDropdown.classList.remove('show');
+                        }
+                    }
+                }
+            }
+            //Going to signin page
+            function clicksignin(){
+                window.location.href='/signin';
+            }
+
+    </script>
+</body>
+</html>

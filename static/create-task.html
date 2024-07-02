@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Task</title>
+    <link rel="stylesheet" href="/static/create-task.css">
+</head>
+<body>
+    <nav class='navbar'>
+        <h2>Institute Hub</h2>
+        <div class='nvbrcolour'>
+            <a href='/events'>Events</a>
+            <a href='/calendar'>Calendar</a>
+            <a href='/resource'>Resource</a>
+            <a href='/communication'>Communication</a>
+            <a href="/tasks">Tasks</a>
+            <div class="profile-container">
+                <button class="profile-button" onclick="toggleDropdown()">Options</button>
+                <div class="dropdown-menu" id="dropdownMenu">
+                    <a href="/profile">Profile</a>
+                    <a href="/logout">Logout</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <h2>Create Task</h2>
+        <form id="createTaskForm" action="/create-task" method="POST">
+            <label for="taskName">Task Name</label>
+            <input type="text" id="taskName" name="name" required>
+
+            <label for="taskDescription">Task Description</label>
+            <textarea id="taskDescription" name="description" rows="4" required></textarea>
+
+            <label for="deadline">Deadline</label>
+            <input type="date" id="deadline" name="deadline" required>
+
+            <label for="assignedTo">Assign To</label>
+            <input type="email" id="assignedTo" name="assigned_to" required>
+
+            <button type="submit">Create Task</button>
+        </form>
+    </div>
+</body>
+</html>

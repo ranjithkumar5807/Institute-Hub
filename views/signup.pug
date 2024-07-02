@@ -1,0 +1,94 @@
+doctype html
+html(lang="en")
+  head
+    meta(charset="UTF-8")
+    meta(name="viewport" content="width=device-width, initial-scale=1.0")
+    title Sign Up
+    link(rel="stylesheet" href="/static/signup.css")
+  body
+    nav.navbar
+      h2 Institute Hub
+      div.nvbrcolour
+        a(href='/') Events
+        a(href='/') Calendar
+        a(href='/') Resource
+        a(href='/') Communication
+        a(href='/') Tasks
+        a(href='/signin') Sign In
+
+    .container
+      p(style=`color:red; display:${display}`)
+        | #{message}
+      h2 Sign Up
+      form#signUpForm(method="post" action="/signup")
+        h3 Personal Information
+        label(for="userType") User Type:
+        select#userType(name="userType" required onchange="toggleFields()")
+          option(value="") Select User Type
+          option(value="student") Student
+          option(value="staff") Staff
+
+        label(for="name") Name:
+        input#name(type="text" name="name" required)
+
+        label(for="dob") Date of Birth:
+        input#dob(type="date" name="dob" required)
+
+        label(for="gender") Gender:
+        select#gender(name="gender" required)
+          option(value="") Select Gender
+          option(value="male") Male
+          option(value="female") Female
+          option(value="other") Other
+
+        label(for="email") Email:
+        input#email(type="email" name="email" required)
+
+        label(for="phone") Phone Number:
+        input#phone(type="tel" name="phone" required)
+
+        #studentFields
+          h3 Academic Information
+          label(for="admissionNumber") Admission Number:
+          input#admissionNumber(type="text" name="admissionNumber")
+
+          label(for="course") Course Enrolled:
+          input#course(type="text" name="course")
+
+        #staffFields(style="display: none;")
+          h3 Staff Information
+          label(for="position") Position:
+          input#position(type="text" name="position")
+
+          label(for="branch") Branch:
+          input#branch(type="text" name="branch")
+
+        h3 Address Information
+        label(for="address") Address:
+        input#address(type="text" name="address" required)
+
+        label(for="password") Password:
+        input#password(type="password" name="password" required)
+
+        button(type="submit") Sign Up
+
+      p Don't have an account? 
+        a(href="/signin") Sign In
+
+    script.
+      function toggleFields() {
+        var userType = document.getElementById('userType').value;
+        var studentFields = document.getElementById('studentFields');
+        var staffFields = document.getElementById('staffFields');
+
+        if (userType === 'student') {
+          studentFields.style.display = 'block';
+          staffFields.style.display = 'none';
+        } else if (userType === 'staff') {
+          studentFields.style.display = 'none';
+          staffFields.style.display = 'block';
+        } else {
+          studentFields.style.display = 'none';
+          staffFields.style.display = 'none';
+        }
+      }

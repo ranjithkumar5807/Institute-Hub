@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Task</title>
+    <link rel="stylesheet" href="/static/edit-task.css"> <!-- Link to your CSS file -->
+</head>
+<body>
+    <nav class='navbar'>
+        <h2>Institute Hub</h2>
+        <div class='nvbrcolour'>
+            <a href='/events'>Events</a>
+            <a href='/calendar'>Calendar</a>
+            <a href='/resource'>Resource</a>
+            <a href='/communication'>Communication</a>
+            <a href="/tasks">Tasks</a>
+            <div class="profile-container">
+                <button class="profile-button" onclick="toggleDropdown()">Options</button>
+                <div class="dropdown-menu" id="dropdownMenu">
+                    <a href="/profile">Profile</a>
+                    <a href="/logout">Logout</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="task-container">
+        <h2>Edit Task</h2>
+        <form id="editTaskForm">
+            <label for="taskName">Task Name:</label>
+            <input type="text" id="taskName" name="taskName" required>
+            
+            <label for="taskDescription">Description:</label>
+            <textarea id="taskDescription" name="taskDescription" required></textarea>
+            
+            <label for="taskDeadline">Deadline:</label>
+            <input type="date" id="taskDeadline" name="taskDeadline" required>
+            
+            <button type="button" onclick="updateTask()">Save</button>
+        </form>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", async function() {
+            const params = new URLSearchParams(window.location.search);
+            const taskId = params.get('id');
+
+            if (taskId) {
+                try {
+                    const response = await fetch(`/task/${taskId}`);
+                    const task = await response.json();
+
+                    document.getElementById('taskName').value = task.name;
+                    document.getElementById('taskDescription').value = task.description;
+                    document.getElementById('taskDeadline').value = new Date(task.deadline).toISOString().split('T')[0];
+                } catch (error) {
+                    console.error('Error fetching task:', error);
+                }
+            }
+        });
+
+        async function updateTask() {
+            const params = new URLSearchParams(window.location.search);
+            const taskId = params.get('id');
+
+            const name = document.getElementById('taskName').value;
+            const description = document.getElementById('taskDescription').value;
+            const deadline = document.getElementById('taskDeadline').value;
+
+            try {
+                const response = await fetch(`/update-task/${taskId}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ name, description, deadline })
+                });
+
+                if (response.ok) {
+                    window.location.href = '/created-tasks';
+                } else {
+                    console.error('Failed to update task');
+                }
+            } catch (error) {
+                console.error('Error updating task:', error);
+            }
+        }
+    </script>
+</body>
+</html>

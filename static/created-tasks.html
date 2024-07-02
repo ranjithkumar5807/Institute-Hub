@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Created Tasks</title>
+    <link rel="stylesheet" href="/static/created-task.css">
+</head>
+<body>
+    <nav class='navbar'>
+        <h2>Institute Hub</h2>
+        <div class='nvbrcolour'>
+            <a href='/events'>Events</a>
+            <a href='/calendar'>Calendar</a>
+            <a href='/resource'>Resource</a>
+            <a href='/communication'>Communication</a>
+            <a href="/tasks">Tasks</a>
+            <div class="profile-container">
+                <button class="profile-button" onclick="toggleDropdown()">Options</button>
+                <div class="dropdown-menu" id="dropdownMenu">
+                    <a href="/profile">Profile</a>
+                    <a href="/logout">Logout</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="task-container" id="tasksList">
+        <h2>Created Tasks</h2>
+    </div>
+    <script>
+        async function fetchCreatedTasks() {
+            try {
+                const response = await fetch('/created-tasks-data');
+                const data = await response.json();
+
+                const tasksListDiv = document.getElementById('tasksList');
+
+                data.forEach(task => {
+                    const taskCard = document.createElement('div');
+                    taskCard.classList.add('task-card');
+
+                    taskCard.innerHTML = `
+                        <h3>${task.name}</h3>
+                        <p><strong>Description:</strong> ${task.description}</p>
+                        <p><strong>Deadline:</strong> ${new Date(task.deadline).toLocaleDateString()}</p>
+                        <p><strong>Assign To:</strong> ${task.assign_to}</p>
+                        <p><strong>Assign By:</strong> ${task.assign_by}</p>
+                        <button onclick="editTask(${task.taskId})">Edit</button>
+                        <button onclick="deleteTask(${task.taskId})">Delete</button>
+                    `;
+
+                    tasksListDiv.appendChild(taskCard);
+                });
+            } catch (error) {
+                console.error('Error fetching created tasks:', error);
+            }
+        }
+
+        async function deleteTask(taskId) {
+            try {
+                const response = await fetch(`/task/${taskId}`, {
+                    method: 'DELETE'
+                });
+
+                if (response.ok) {
+                    window.location.href='/created-tasks';
+                } else {
+                    console.error('Failed to delete task');
+                }
+            } catch (error) {
+                console.error('Error deleting task:', error);
+            }
+        }
+
+        async function editTask(taskId) {
+            window.location.href = `/edit-task?id=${taskId}`;
+        }
+
+        // Fetch the created tasks on page load
+        window.onload = fetchCreatedTasks;
+    </script>
+</body>
+</html>

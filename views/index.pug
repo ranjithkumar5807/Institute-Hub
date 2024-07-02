@@ -1,0 +1,71 @@
+doctype html
+html(lang="en")
+  head
+    link(rel="stylesheet", href="/static/index.css")
+  body
+    nav.navbar
+      h2 Institute Hub
+      div.nvbrcolour
+        a(href='/events') Events
+        a(href='/calendar') Calendar
+        a(href='/resource') Resource
+        a(href='/communication') Communication
+        a(href='/tasks') Tasks
+        div.profile-container
+            button.profile-button(onclick="toggleDropdown()") Options
+            div.dropdown-menu#dropdownMenu
+             a(href='/profile') Profile
+             a(href='/logout' ) Logout
+
+    .index-body
+      .bg-image
+        img(src='/static/images/institute.jpg', width='100%', height='60%')
+      .card-holder
+        .home-card
+          h2 Events
+          p To create, schedule, and manage events such as seminars, workshops, and cultural programs.
+          .center-button
+            button(onclick="redirectToLocation('/events')") Events
+        .home-card
+          h2 Calendar
+          p Dynamic calendar, to view and manage institute-wide schedules, class timetables, meetings, and deadlines.
+          .center-button
+            button(onclick="redirectToLocation('/calendar')") Calendar
+        .home-card
+          h2 Resource
+          p Allocate and manage resources such as classrooms, equipment.
+          .center-button
+            button(onclick="redirectToLocation('/Resource')") Resource
+        .home-card
+          h2 Communication
+          p For Announcements, Messages, Notifications, and Reminders.
+          .center-button
+            button(onclick="redirectToLocation('/communication')") Communication
+        .home-card
+          h2 Tasks
+          p Create and Assign Tasks, Set Deadlines, and Track Progress.
+          .center-button
+            button(onclick="redirectToLocation('/tasks')") Tasks
+
+    script.
+      function redirectToLocation(url) {
+        window.location.href = url;
+      }
+      // script.js
+      function toggleDropdown() {
+          document.getElementById("dropdownMenu").classList.toggle("show");
+      }
+
+      // Close the dropdown if the user clicks outside of it
+      window.onclick = function(event) {
+          if (!event.target.matches('.profile-button')) {
+              var dropdowns = document.getElementsByClassName("dropdown-menu");
+              for (var i = 0; i < dropdowns.length; i++) {
+                  var openDropdown = dropdowns[i];
+                  if (openDropdown.classList.contains('show')) {
+                      openDropdown.classList.remove('show');
+                  }
+              }
+          }
+      }
+         

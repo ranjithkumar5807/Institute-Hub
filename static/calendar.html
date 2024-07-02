@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calendar</title>
+    <link rel="stylesheet" href="/static/calendar.css">
+</head>
+<body>
+    <nav class='navbar'>
+        <h2>Institute Hub</h2>
+        <div class='nvbrcolour'>
+            <a href='/events'>Events</a>
+            <a href='/calendar'>Calendar</a>
+            <a href='/resource'>Resource</a>
+            <a href='/communication'>Communication</a>
+            <a href="/tasks">Tasks</a>
+            <div class="profile-container">
+                <button class="profile-button" onclick="toggleDropdown()">Options</button>
+                <div class="dropdown-menu" id="dropdownMenu">
+                    <a href="/profile">Profile</a>
+                    <a href="/logout">Logout</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+
+    <div class="container">
+        <h2>Calendar</h2>
+        <div class="input-group">
+            <input type="date" id="selectedDate">
+            <button onclick="fetchCalendarData()">Search</button>
+        </div>
+        <div id="results">
+            <div id="tasks">
+                <h3>Tasks</h3>
+            </div>
+            <div id="events">
+                <h3>Events</h3>
+            </div>
+            <div id="resources">
+                <h3>Resources</h3>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function toggleDropdown() {
+            document.getElementById("dropdownMenu").classList.toggle("show");
+        }
+
+        window.onclick = function(event) {
+            if (!event.target.matches('.profile-button')) {
+                var dropdowns = document.getElementsByClassName("dropdown-menu");
+                for (var i = 0; i < dropdowns.length; i++) {
+                    var openDropdown = dropdowns[i];
+                    if (openDropdown.classList.contains('show')) {
+                        openDropdown.classList.remove('show');
+                    }
+                }
+            }
+        }
+
+        async function fetchCalendarData() {
+            try {
+                const selectedDate = document.getElementById('selectedDate').value;
+
+                // Fetch tasks before or on the selected date
+                const tasksResponse = await fetch(`/tasks-before-date?date=${selectedDate}`);
+                const tasks = await tasksResponse.json();
+                displayTasks(tasks);
+
+                // Fetch events for the selected date
+                const eventsResponse = await fetch(`/events-on-date?date=${selectedDate}`);
+                const events = await eventsResponse.json();
+                displayEvents(events);
+
+                // Fetch resources for the selected date
+                const resourcesResponse = await fetch(`/resources-on-date?date=${selectedDate}`);
+                const { resources } = await resourcesResponse.json();
+                displayResources(resources);
+            } catch (error) {
+                console.error('Error fetching calendar data:', error);
+            }
+        }
+
+        function displayTasks(tasks) {
+            const tasksDiv = document.getElementById('tasks');
+            tasksDiv.innerHTML = '<h3>Your Tasks</h3>';
+            tasks.forEach(task => {
+                const taskCard = document.createElement('div');
+                taskCard.classList.add('task-card');
+                taskCard.innerHTML = `
+                    <h4>${task[1]}</h4>
+                    <p><strong>Description:</strong> ${task[2]}</p>
+                    <p><strong>Deadline:</strong> ${new Date(task[3]).toLocaleDateString()}</p>
+                    <p><strong>Assigned To:</strong> ${task[4]}</p>
+                    <p><strong>Assigned By:</strong> ${task[5]}</p>
+                `;
+                tasksDiv.appendChild(taskCard);
+            });
+        }
+
+        function displayEvents(events) {
+            const eventsDiv = document.getElementById('events');
+            eventsDiv.innerHTML = '<h3>Events</h3>';
+            events.forEach(event => {
+                const eventCard = document.createElement('div');
+                eventCard.classList.add('event-card');
+                eventCard.innerHTML = `
+                    <h4>${event[1]}</h4>
+                    <p><strong>Description:</strong> ${event[2]}</p>
+                    <p><strong>Type:</strong> ${event[3]}</p>
+                    <p><strong>Date:</strong> ${new Date(event[4]).toLocaleDateString()}</p>
+                    <p><strong>Created By:</strong> ${event[6]}</p>
+                `;
+                eventsDiv.appendChild(eventCard);
+            });
+        }
+
+        function displayResources(resources) {
+            const resourcesDiv = document.getElementById('resources');
+            resourcesDiv.innerHTML = '<h3>Resources</h3>';
+            resources.forEach(resource => {
+                const resourceCard = document.createElement('div');
+                resourceCard.classList.add('resource-card');
+                resourceCard.innerHTML = `
+                    <h4>${resource.resource_type}</h4>
+                    <p><strong>Details:</strong> ${resource.resource_details}</p>
+                    <p><strong>Booked Date:</strong> ${new Date(resource.booked_date).toLocaleDateString()}</p>
+                    <p><strong>From Time:</strong> ${new Date(resource.from_time).toLocaleTimeString()}</p>
+                    <p><strong>To Time:</strong> ${new Date(resource.to_time).toLocaleTimeString()}</p>
+                    <p><strong>Purpose:</strong> ${resource.purpose}</p>
+                `;
+                resourcesDiv.appendChild(resourceCard);
+            });
+        }
+    </script>
+</body>
+</html>

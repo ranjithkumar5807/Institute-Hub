@@ -1,0 +1,38 @@
+doctype html
+html(lang='en')
+  head
+    meta(charset='UTF-8')
+    meta(name='viewport' content='width=device-width, initial-scale=1.0')
+    title Sign In
+    link(rel='stylesheet' href='/static/signin.css')
+  body
+    nav.navbar
+      h2 Institute Hub
+      .nvbrcolour
+        a(href='/') Events
+        a(href='/') Calendar
+        a(href='/') Resource
+        a(href='/') Communication
+        a(href='/') Tasks
+        a(href='/signin') Sign In
+
+    .container
+      p(style=`color:red; display:${display}`)
+        | #{message}
+      h2 Sign In
+      form#signInForm(action='/signin' method='post')
+        label(for='userType') User Type:
+        select#userType(name='userType' required)
+          option(value='') Select User Type
+          option(value='student') Student
+          option(value='staff') Staff
+        
+        label(for='email') Email:
+        input#email(type='email' name='email' required)
+        
+        label(for='password') Password:
+        input#password(type='password' name='password' required)
+        
+        button(type='submit') Sign In
+      p Don't have an account? 
+        a(href='/signup') Sign Up
