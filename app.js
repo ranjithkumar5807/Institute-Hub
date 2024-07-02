@@ -852,21 +852,6 @@ app.get('/calendar', (req, res) => {
 });
 
 
-
-
-app.listen(port, () => {
-  console.log(`Server is running on http://localhost:${port}`);
-});
-
-
-
-
-
-
-
-
-
-
 app.get('/tasks-before-date', async (req, res) => {
   try {
     const connection = await oracledb.getConnection(dbConfig);
@@ -948,14 +933,9 @@ app.get('/resources-on-date', async (req, res) => {
 
 
 
-
 app.get("/communication",(req,res)=>{
   res.sendFile(__dirname+"/static/communications.html");
 })
-
-
-
-
 
 
 app.post('/send-communication', async (req, res) => {
@@ -979,6 +959,7 @@ app.post('/send-communication', async (req, res) => {
   }
 });
 
+
 app.get('/communications', async (req, res) => {
   try {
     const connection = await oracledb.getConnection(dbConfig);
@@ -998,6 +979,7 @@ app.get('/communications', async (req, res) => {
     res.status(500).json({ message: 'Failed to fetch communications', error });
   }
 });
+
 
 app.delete('/communications/:id', async (req, res) => {
   try {
@@ -1020,3 +1002,7 @@ app.delete('/communications/:id', async (req, res) => {
 });
 
 
+
+app.listen(port, () => {
+  console.log(`Server is running on http://localhost:${port}`);
+});
