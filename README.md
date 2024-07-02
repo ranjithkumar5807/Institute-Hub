@@ -1,6 +1,6 @@
 # Institute-Hub
 
-Install the node dependencies\n
+Install the node dependencies
 Install Oracle database
 IN Table.txt run all the SQL commands in your oracle database
 
